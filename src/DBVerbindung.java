@@ -9,17 +9,17 @@ class DBVerbindung {
     public void dbVerwenden() {
 
         // 1. Treiber laden und 2. Herstellen einer Verbindung mit der Datenbank
-        Connection conn = null;
+        Connection conn;
         conn = verbindungHerstellen("data/musikgruppen.sqlite");
 
         //Die Verwendung von Datenbanken kann vielfältige Fehler erzeugen, vgl. Arbeit mit Dateien 
         try{
             // 3. Erzeugen eines Statements durch das Verbindungs-Objekt
-            Statement stmt = conn.createStatement();      
+            Statement stmt = conn.createStatement();
 
-            // 4a. Erstellen einer SQL Anfrage: INSERT INTO
-            // Die id wird hier nicht eingefügt, da sie beim Einfügen eines neuen Datensatzes automatisch erzeugt wird (auto-increment)
-            // Da dass Anführungszeichen von Java als String Anfang/Ende interpretiert wird, muss es mit Hilfe des Backslash \ eingegeben werden.
+            // 4a. Erstellen einer SQL Anfrage: INSERT INTO.
+            // Die id wird hier nicht eingefügt, da sie beim Einfügen eines neuen Datensatzes automatisch erzeugt wird (auto-increment).
+            // Da dass Anführungszeichen von Java als String Anfang/Ende interpretiert wird, muss es mithilfe des Backslash \ eingegeben werden.
             String anfragestring = "INSERT INTO Person (Vorname, Nachname) VALUES (\"Tina\", \"Mustermann\");";
             // 5a Ausführen der SQL Anfrage (OHNE Ergebnis)
             stmt.execute(anfragestring);
@@ -31,7 +31,7 @@ class DBVerbindung {
             
             // 6. Durchgehen der Ergebnismenge, solange es jeweils ein nächstes Ergebnis gibt
             while (rset.next()){
-                ausgeben(rset.getString("Vorname") + ", " + (rset.getString("Nachname")));     //mit getString- bzw. getInt-Methoden des Ergebnismengen-Objekts jeweils die Daten herausholen
+                DBLog(rset.getString("Vorname") + ", " + (rset.getString("Nachname")));     //mit getString- bzw. getInt-Methoden des Ergebnismengen-Objekts jeweils die Daten herausholen
             }
             
             // 7. Ergebnismenge schliessen
@@ -40,10 +40,10 @@ class DBVerbindung {
             stmt.close();
             // 9. Verbindung schliessen     
             conn.close();
-            ausgeben("Abgemeldet.\n");
+            DBLog("Abgemeldet.\n");
         } catch (Exception e) {
             // Fehlerbehebung
-            ausgeben(e.toString());
+            DBLog(e.toString());
         }
 
     }  
@@ -59,8 +59,8 @@ class DBVerbindung {
      * @return          die aufgebaute Verbindung zur Datenbank
      */
     private Connection verbindungHerstellen(String datenbank) {
-        ausgeben("Ich suche nach der Datenbank in: \n"+datenbank);
-        ausgeben("Verbindung zu SQLite Datenbank wird versucht.");
+        DBLog("Ich suche nach der Datenbank in: \n"+datenbank);
+        DBLog("Verbindung zu SQLite Datenbank wird versucht.");
 
         String treiber = "org.sqlite.JDBC"; // z.B. aus: sqlite-jdbc-3.7.2.jar
         String praefix = "jdbc:sqlite:";  
@@ -71,12 +71,12 @@ class DBVerbindung {
             //2. Verbindung zur DB erstellen
             //user und kennwort spielen bei der SQLite Datenbank keine Rolle, sind daher null
             Connection c = DriverManager.getConnection(praefix + datenbank, null, null);
-            ausgeben("Verbindung zu SQLite Datenbank steht.");
+            DBLog("Verbindung zu SQLite Datenbank steht.");
             // Die Verbindung wird zurückgegeben
             return c;
         } catch (Exception e) {
-            //ausgeben("Fehler beim Erstellen der Verbindung: " + e);
-            e.printStackTrace();
+            DBLog("Fehler beim Erstellen der Verbindung: " + e);
+            //e.printStackTrace();
             return null;
         }
     }
@@ -85,10 +85,13 @@ class DBVerbindung {
      * Dient zur Ausgabe eines Strings in einem assoziierten Fenster. 
      * Das ist nur da, damit man die Ausgaben nicht nur auf der Konsole mitlesen kann.
      * 
-     * @param s Der auszugebende String.
+     * @param msg Der auszugebende String.
      */
-    private void ausgeben(String s) {
-        System.out.println(s);
+    private void DBLog(String msg) {
+        System.out.println("[" + (
+                new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
+                    .format(new java.util.Date()
+                ) + "] " + msg);
     }
 
 }

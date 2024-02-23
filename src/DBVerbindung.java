@@ -15,6 +15,7 @@ class DBVerbindung {
         //Die Verwendung von Datenbanken kann vielfältige Fehler erzeugen, vgl. Arbeit mit Dateien 
         try{
             // 3. Erzeugen eines Statements durch das Verbindungs-Objekt
+            assert conn != null;
             Statement stmt = conn.createStatement();
 
             // 4a. Erstellen einer SQL Anfrage: INSERT INTO.

@@ -11,7 +11,7 @@ public class EinlesenDemo {
      * Die eingelesenen Zeilen werden in der Demo direkt auf dem Bildschirm ausgegeben.
      * Es ist bekannt, dass die Testdatei 6 Zeilen enthält. 
      */
-    void einlesen() {
+    public static void einlesen() {
 
         // Da bei der Arbeit mit Dateien vielfältige Fehler auftreten können, muss
         // eine sogenannte "Fehlerbehandlung" erfolgen.
@@ -23,7 +23,7 @@ public class EinlesenDemo {
         try {
             // Auslesen aller Zeilen der Datei. 
             // Es wird eine Liste mit den einzelnen Zeilen (eingelesen als Strings) erstellt.
-            String fileName = "Testdatei.txt" ;
+            String fileName = "data/Testdatei.txt" ;
             List<String> lines = Files.readAllLines(Path.of(fileName));
 
             // Hier wird über die einzelnen Zeilen iteriert. Jede Zeile wird auf der Konsole ausgegeben.

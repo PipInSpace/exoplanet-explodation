@@ -10,7 +10,7 @@ class DBVerbindung {
 
         // 1. Treiber laden und 2. Herstellen einer Verbindung mit der Datenbank
         Connection conn = null;
-        conn = verbindungHerstellen("musikgruppen.sqlite"); 
+        conn = verbindungHerstellen("data/musikgruppen.sqlite");
 
         //Die Verwendung von Datenbanken kann vielfältige Fehler erzeugen, vgl. Arbeit mit Dateien 
         try{
@@ -75,7 +75,8 @@ class DBVerbindung {
             // Die Verbindung wird zurückgegeben
             return c;
         } catch (Exception e) {
-            ausgeben("Fehler beim Erstellen der Verbindung: " + e);
+            //ausgeben("Fehler beim Erstellen der Verbindung: " + e);
+            e.printStackTrace();
             return null;
         }
     }

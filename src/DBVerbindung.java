@@ -21,12 +21,12 @@ class DBVerbindung {
             // 4a. Erstellen einer SQL Anfrage: INSERT INTO.
             // Die id wird hier nicht eingefügt, da sie beim Einfügen eines neuen Datensatzes automatisch erzeugt wird (auto-increment).
             // Da dass Anführungszeichen von Java als String Anfang/Ende interpretiert wird, muss es mithilfe des Backslash \ eingegeben werden.
-            String anfragestring = "INSERT INTO Person (Vorname, Nachname) VALUES (\"Tina\", \"Mustermann\");";
+            // String anfragestring = "INSERT INTO Person (Vorname, Nachname) VALUES (\"Tina\", \"Mustermann\");";
             // 5a Ausführen der SQL Anfrage (OHNE Ergebnis)
-            stmt.execute(anfragestring);
+            //stmt.execute(anfragestring);
             
             // 4b. Erstellen einer SQL Anfrage: INSERT INTO
-            anfragestring = "SELECT * FROM Person;";
+            String anfragestring = "SELECT * FROM Person;";
             // 5b Ausführen der SQL Anfrage (MIT Ergebnis), das Ergebnis wird als ResultSet gespeichert
             ResultSet rset = stmt.executeQuery(anfragestring);
             

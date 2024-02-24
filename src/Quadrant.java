@@ -1,7 +1,7 @@
 import java.util.List;
 
 public class Quadrant {
-    // fixed Values
+    // fixed values
     private final double GOLD_VALUE = 10.0;
     private final double COPPER_VALUE = 4.0;
     private final double SILVER_VALUE = 6.0;
@@ -45,10 +45,12 @@ public class Quadrant {
     }
 
     public double getValueIndex() {
+        // get average value per point in the whole quadrant
         return getRawValueIndex() / ((double) (getWidth() * getHeight()));
     }
 
     public double getRawValueIndex() {
+        // go over each point and add the found recource's value
         double rawIndex = 0.0;
         for (char[] line : this.map) {
             for (char ch : line) {
@@ -77,10 +79,12 @@ public class Quadrant {
     }
 
     public double getResourceDensity(char resourceID) {
+        // get density of a selected resource
         return ((double)getResourceCount(resourceID)) / ((double) (getWidth() * getHeight()));
     }
 
     public int getResourceCount(char resourceID) {
+        // get density of a selected resource
         int total = 0;
         for (char[] r : this.map) {
             for (char c : r) {
@@ -98,7 +102,7 @@ public class Quadrant {
             this.planetName = fArr[fArr.length - 1].split("-")[0];
         }
         */
-        return this.planetName;
+        return this.planetName == null ? "" : this.planetName;
     }
 
     public int getQuadrant() {

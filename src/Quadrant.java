@@ -1,6 +1,14 @@
 import java.util.List;
 
 public class Quadrant {
+    // fixed Values
+    private final double GOLD_VALUE = 10.0;
+    private final double COPPER_VALUE = 4.0;
+    private final double SILVER_VALUE = 6.0;
+    private final double URANIUM_VALUE = 20.0;
+    private final double ZINC_VALUE = 2.0;
+
+
     // Parsed Quadrant information, access over .get methods.
     private final String planetName;
     private final int quadrantIndex;
@@ -37,38 +45,35 @@ public class Quadrant {
     }
 
     public double getValueIndex() {
+        return getRawValueIndex() / ((double) (getWidth() * getHeight()));
+    }
+
+    public double getRawValueIndex() {
         double rawIndex = 0.0;
-        int positions = 0;
         for (char[] line : this.map) {
             for (char ch : line) {
                 switch (ch){
                     case 'g':
-                        rawIndex += 10.0;
-                        positions += 1;
+                        rawIndex += GOLD_VALUE;
                         break;
                     case 'k':
-                        rawIndex += 4.0;
-                        positions += 1;
+                        rawIndex += COPPER_VALUE;
                         break;
                     case 's':
-                        rawIndex += 6.0;
-                        positions += 1;
+                        rawIndex += SILVER_VALUE;
                         break;
                     case 'u':
-                        rawIndex += 20.0;
-                        positions += 1;
+                        rawIndex += URANIUM_VALUE;
                         break;
                     case 'z':
-                        rawIndex += 2;
-                        positions += 1;
+                        rawIndex += ZINC_VALUE;
                         break;
-                    case 'x':
-                        positions += 1;
+                    default:
                         break;
                 }
             }
         }
-        return rawIndex / (double) positions;
+        return rawIndex;
     }
 
     public double getResourceDensity(char resourceID) {

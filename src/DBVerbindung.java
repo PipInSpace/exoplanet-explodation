@@ -60,7 +60,7 @@ class DBVerbindung {
      * @return          die aufgebaute Verbindung zur Datenbank
      */
     private Connection verbindungHerstellen(String datenbank) {
-        DBLog("Ich suche nach der Datenbank in: \n"+datenbank);
+        DBLog("Ich suche nach der Datenbank in: \n    "+datenbank);
         DBLog("Verbindung zu SQLite Datenbank wird versucht.");
 
         String treiber = "org.sqlite.JDBC"; // z.B. aus: sqlite-jdbc-3.7.2.jar

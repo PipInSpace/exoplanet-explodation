@@ -9,7 +9,7 @@ public class ResourceMap {
     // Parsed Map information, access over .get methods.
     private String planetName;
     private Integer quadrant;
-    private Float valueIndex;
+    private Double valueIndex;
 
     // Raw Data
     private final String path;
@@ -28,11 +28,35 @@ public class ResourceMap {
         this.mapLines = Objects.requireNonNullElseGet(lines, ArrayList::new);
     }
 
-    public float getValueIndex() {
+    public double getValueIndex() {
         if (this.valueIndex == null) {
             // Do calculation here.
             // Is that your no-work-until-needed approach?
-            this.valueIndex = 0.0f;
+            double rawIndex = 0.0;
+            int positions = 0;
+            for (String line : this.mapLines) {
+                for (char ch : line.toCharArray()) {
+                    positions += 1;
+                    switch (ch){
+                        case 'g':
+                            rawIndex += 10.0;
+                            break;
+                        case 'k':
+                            rawIndex += 4.0;
+                            break;
+                        case 's':
+                            rawIndex += 6.0;
+                            break;
+                        case 'u':
+                            rawIndex += 20.0;
+                            break;
+                        case 'z':
+                            rawIndex += 2;
+                            break;
+                    }
+                }
+            }
+            this.valueIndex = rawIndex / (double) positions;
         }
         return this.valueIndex;
     }

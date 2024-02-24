@@ -89,10 +89,12 @@ class DBVerbindung {
      * @param msg Der auszugebende String.
      */
     private void DBLog(String msg) {
-        System.out.println("[" + (
-                new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
-                    .format(new java.util.Date()
-                ) + "] " + msg);
+        System.out.println(
+                "[" +
+                (new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
+                    .format(new java.util.Date())
+                + "] " + msg
+        );
     }
 
 }

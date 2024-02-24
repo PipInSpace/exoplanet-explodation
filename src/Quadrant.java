@@ -2,11 +2,11 @@ import java.util.List;
 
 public class Quadrant {
     // fixed values
-    private final double GOLD_VALUE = 10.0;
-    private final double COPPER_VALUE = 4.0;
-    private final double SILVER_VALUE = 6.0;
-    private final double URANIUM_VALUE = 20.0;
-    private final double ZINC_VALUE = 2.0;
+    private static final double GOLD_VALUE = 10.0;
+    private static final double COPPER_VALUE = 4.0;
+    private static final double SILVER_VALUE = 6.0;
+    private static final double URANIUM_VALUE = 20.0;
+    private static final double ZINC_VALUE = 2.0;
 
 
     // Parsed Quadrant information, access over .get methods.

@@ -36,22 +36,29 @@ public class ResourceMap {
             int positions = 0;
             for (String line : this.mapLines) {
                 for (char ch : line.toCharArray()) {
-                    positions += 1;
                     switch (ch){
                         case 'g':
                             rawIndex += 10.0;
+                            positions += 1;
                             break;
                         case 'k':
                             rawIndex += 4.0;
+                            positions += 1;
                             break;
                         case 's':
                             rawIndex += 6.0;
+                            positions += 1;
                             break;
                         case 'u':
                             rawIndex += 20.0;
+                            positions += 1;
                             break;
                         case 'z':
                             rawIndex += 2;
+                            positions += 1;
+                            break;
+                        case 'x':
+                            positions += 1;
                             break;
                     }
                 }

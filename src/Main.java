@@ -13,20 +13,8 @@ public class Main {
         // "data/PlanetB-Q3_16x50.txt"
         // "data/PlanetB-Q5_50x100.txt"
 
-        // Read File and Parse Filename
-        final String path = "data/PlanetA-Q1_6x13.txt";
-        final String planet = path.split("/")[1].split("-")[0];
-        final int quadrant = Integer.parseInt(path.split("/")[1].split("-Q")[1].split("_")[0]);
-        final List<String> map;
-        try {
-            map = Files.readAllLines(Path.of(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
-
         // setup quadrant
-        Quadrant q = new Quadrant(planet, quadrant, map);
+        Quadrant q = Utils.quadrantFromFile("data/PlanetA-Q1_6x13.txt");
         System.out.println("Name: " + q.getPlanetName());
         System.out.println("Quadrant: Q" + q.getQuadrant());
         System.out.println("Value Index: " + q.getValueIndex());

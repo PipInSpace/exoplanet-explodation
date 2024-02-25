@@ -32,7 +32,7 @@ class DBVerbindung {
             
             // 6. Durchgehen der Ergebnismenge, solange es jeweils ein nächstes Ergebnis gibt
             while (rset.next()){
-                DBLog(rset.getString("Vorname") + ", " + (rset.getString("Nachname")));     //mit getString- bzw. getInt-Methoden des Ergebnismengen-Objekts jeweils die Daten herausholen
+                Utils.logTS(rset.getString("Vorname") + ", " + (rset.getString("Nachname")));     //mit getString- bzw. getInt-Methoden des Ergebnismengen-Objekts jeweils die Daten herausholen
             }
             
             // 7. Ergebnismenge schliessen
@@ -41,10 +41,10 @@ class DBVerbindung {
             stmt.close();
             // 9. Verbindung schliessen     
             conn.close();
-            DBLog("Abgemeldet.\n");
+            Utils.logTS("Abgemeldet.\n");
         } catch (Exception e) {
             // Fehlerbehebung
-            DBLog(e.toString());
+            Utils.logTS(e.toString());
         }
 
     }  
@@ -60,8 +60,8 @@ class DBVerbindung {
      * @return          die aufgebaute Verbindung zur Datenbank
      */
     private Connection verbindungHerstellen(String datenbank) {
-        DBLog("Ich suche nach der Datenbank in: \n    "+datenbank);
-        DBLog("Verbindung zu SQLite Datenbank wird versucht.");
+        Utils.logTS("Ich suche nach der Datenbank in: \n    "+datenbank);
+        Utils.logTS("Verbindung zu SQLite Datenbank wird versucht.");
 
         String treiber = "org.sqlite.JDBC"; // z.B. aus: sqlite-jdbc-3.7.2.jar
         String praefix = "jdbc:sqlite:";  
@@ -72,29 +72,13 @@ class DBVerbindung {
             //2. Verbindung zur DB erstellen
             //user und kennwort spielen bei der SQLite Datenbank keine Rolle, sind daher null
             Connection c = DriverManager.getConnection(praefix + datenbank, null, null);
-            DBLog("Verbindung zu SQLite Datenbank steht.");
+            Utils.logTS("Verbindung zu SQLite Datenbank steht.");
             // Die Verbindung wird zurückgegeben
             return c;
         } catch (Exception e) {
-            DBLog("Fehler beim Erstellen der Verbindung: " + e);
+            Utils.logTS("Fehler beim Erstellen der Verbindung: " + e);
             //e.printStackTrace();
             return null;
         }
     }
-
-    /**
-     * Dient zur Ausgabe eines Strings in einem assoziierten Fenster. 
-     * Das ist nur da, damit man die Ausgaben nicht nur auf der Konsole mitlesen kann.
-     * 
-     * @param msg Der auszugebende String.
-     */
-    private void DBLog(String msg) {
-        System.out.println(
-                "[" +
-                (new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
-                    .format(new java.util.Date())
-                + "] " + msg
-        );
-    }
-
 }

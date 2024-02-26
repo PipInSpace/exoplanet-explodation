@@ -11,6 +11,7 @@ public class Main {
 
         try (Connection conn = Utils.dbConnectTo("data/cartography.sqlite")) {
             assert conn != null;
+            conn.createStatement().executeQuery("PRAGMA foreign_keys = ON;"); // Needed for deletion cascade
             Statement stmt = conn.createStatement();
             String anfragestring = "SELECT * FROM Planets;";
             ResultSet rset = stmt.executeQuery(anfragestring);

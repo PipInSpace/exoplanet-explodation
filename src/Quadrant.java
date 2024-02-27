@@ -139,7 +139,7 @@ public class Quadrant {
         return this.planetName == null ? "" : this.planetName;
     }
 
-    public int getQuadrant() {
+    public int getQuadrantNumber() {
         return this.quadrantIndex;
     }
 

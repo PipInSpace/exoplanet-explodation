@@ -23,7 +23,8 @@ public class Main {
                 int quadrantNum = quadrant.getQuadrantNumber();
                 int quadrantWidth = quadrant.getWidth();
                 int quadrantHeight = quadrant.getHeight();
-                double qVInd = quadrant.getValueIndex();
+                double quadrantValueIndex = quadrant.getValueIndex();
+                List<Resource> resources = Resource.getResourceList(quadrant.getRawMap());
                 String stmtStr;
 
                 stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Planets WHERE name = '%s';", pName);
@@ -45,14 +46,14 @@ public class Main {
                 int quadrantID;
                 if (!quadrantExists) {
                     // Create quadrant
-                    stmtStr = String.format(Locale.US, "INSERT INTO Quadrants (planet_fid, number, value_index, width, height) \nVALUES (%d, %d, %.15g, %d, %d);", planetID, quadrantNum, qVInd, quadrantWidth, quadrantHeight);
+                    stmtStr = String.format(Locale.US, "INSERT INTO Quadrants (planet_fid, number, value_index, width, height) \nVALUES (%d, %d, %.15g, %d, %d);", planetID, quadrantNum, quadrantValueIndex, quadrantWidth, quadrantHeight);
                     conn.createStatement().execute(stmtStr);
                     // Optain ID
                     stmtStr = String.format("SELECT quadrants_id AS 'ID' FROM Planets WHERE planet_fid = %d AND number = %d;", planetID, quadrantNum);
                     quadrantID = conn.createStatement().executeQuery(stmtStr).getInt("ID");
                 } else {
                     // Update quadrant
-                    stmtStr = String.format(Locale.US, "UPDATE Quadrants\nSET value_index = %.15g,\nwidth = %d,\nheight = %d\nWHERE planet_fid = %d AND number = %d;", qVInd, quadrantWidth, quadrantHeight, planetID, quadrantNum);
+                    stmtStr = String.format(Locale.US, "UPDATE Quadrants\nSET value_index = %.15g,\nwidth = %d,\nheight = %d\nWHERE planet_fid = %d AND number = %d;", quadrantValueIndex, quadrantWidth, quadrantHeight, planetID, quadrantNum);
                     conn.createStatement().execute(stmtStr);
                     // Optain ID
                     stmtStr = String.format("SELECT quadrants_id AS 'ID' FROM Quadrants WHERE planet_fid = %d AND number = %d;", planetID, quadrantNum);

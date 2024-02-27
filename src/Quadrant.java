@@ -39,6 +39,10 @@ public class Quadrant {
         }
     }
 
+    public char[][] getRawMap() {
+        return this.map;
+    }
+
     public static Quadrant fromFile(String path) {
         final String[] pathArr = path.replace('\\', '/').split("/");
         final String fileName = pathArr[pathArr.length - 1];

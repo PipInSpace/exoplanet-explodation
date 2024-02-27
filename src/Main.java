@@ -1,3 +1,4 @@
+import java.util.List;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,9 +10,11 @@ public class Main {
         //DBVerbindung db = new DBVerbindung();
         //db.dbVerwenden();
 
+        List<String> files = Utils.openFolder("data/quadrants");
+
         try (Connection conn = Utils.dbConnectTo("data/cartography.sqlite")) {
             assert conn != null;
-            conn.createStatement().executeQuery("PRAGMA foreign_keys = ON;"); // Needed for deletion cascade
+            conn.createStatement().execute("PRAGMA foreign_keys = ON; PRAGMA foreign_keys;"); // Needed for deletion cascade
             Statement stmt = conn.createStatement();
             String anfragestring = "SELECT * FROM Planets;";
             ResultSet rset = stmt.executeQuery(anfragestring);
@@ -25,6 +28,7 @@ public class Main {
             Utils.logTS("Abgemeldet.\n");
         } catch (SQLException e) {
             Utils.logTS("SQL Error at cartography database: " + e);
+            e.printStackTrace();
         }
 
         // "data/PlanetA-Q1_6x13.txt"
@@ -32,7 +36,7 @@ public class Main {
         // "data/PlanetB-Q5_50x100.txt"
 
         // setup quadrant
-        Quadrant q = Quadrant.fromFile("data/PlanetA-Q1_6x13.txt");
+        Quadrant q = Quadrant.fromFile(files.get(0));
         assert q != null;
         Utils.logTS("Name: " + q.getPlanetName());
         Utils.logTS("Quadrant: Q" + q.getQuadrant());

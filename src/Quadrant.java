@@ -40,11 +40,13 @@ public class Quadrant {
     }
 
     public static Quadrant fromFile(String path) {
+        final String[] pathArr = path.replace('\\', '/').split("/");
+        final String fileName = pathArr[pathArr.length - 1];
         // get planet name from path
-        final String planet = path.replace('\\', '/').split("/")[1].split("-")[0];
+        final String planet = fileName.split("-")[0];
 
         // get quadrant id from path
-        final int quadrant = Integer.parseInt(path.split("/")[1].split("-Q")[1].split("_")[0]);
+        final int quadrant = Integer.parseInt(fileName.split("-Q")[1].split("_")[0]);
 
         // read file
         final List<String> map;

@@ -1,5 +1,8 @@
+import java.util.List;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.ArrayList;
 
 public class Utils {
     /**
@@ -33,6 +36,20 @@ public class Utils {
             //e.printStackTrace();
             return null;
         }
+    }
+
+    public static List<String> openFolder(String path) {
+        List<String> filePaths = new ArrayList<>();
+        final File folder = new File(path);
+
+        for (final File fileEntry : folder.listFiles()) {
+            if (!fileEntry.isDirectory()) {
+                logTS("Opening file " + fileEntry.getPath());
+                filePaths.add(fileEntry.getPath());
+            }
+        }
+
+        return filePaths;
     }
 
     /**

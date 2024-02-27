@@ -116,7 +116,7 @@ public class Quadrant {
         List<Point> points = new ArrayList<>();
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                if(map[y][x] == resourceID) points.add(new Point(x, y));
+                if(map[x][y] == resourceID) points.add(new Point(x, y));
             }
         }
 
@@ -128,7 +128,7 @@ public class Quadrant {
         Map<Point, Character> resorcePositions = new HashMap<>();
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                if(map[y][x] != 'x') resorcePositions.put(new Point(x, y), map[y][x]);
+                if(map[x][y] != 'x') resorcePositions.put(new Point(x, y), map[x][y]);
             }
         }
 
@@ -144,10 +144,10 @@ public class Quadrant {
     }
 
     public int getWidth() {
-        return map[0].length;
+        return map.length;
     }
 
     public int getHeight() {
-        return map.length;
+        return map[0].length;
     }
 }

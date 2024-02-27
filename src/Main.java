@@ -32,7 +32,7 @@ public class Main {
         // "data/PlanetB-Q5_50x100.txt"
 
         // setup quadrant
-        Quadrant q = Utils.quadrantFromFile("data/PlanetA-Q1_6x13.txt");
+        Quadrant q = Quadrant.fromFile("data/PlanetA-Q1_6x13.txt");
         assert q != null;
         Utils.logTS("Name: " + q.getPlanetName());
         Utils.logTS("Quadrant: Q" + q.getQuadrant());

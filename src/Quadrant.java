@@ -1,4 +1,7 @@
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +37,25 @@ public class Quadrant {
                 map[x][y] = lines[y].charAt(x);
             }
         }
+    }
+
+    public static Quadrant fromFile(String path) {
+        // get planet name from path
+        final String planet = path.replace('\\', '/').split("/")[1].split("-")[0];
+
+        // get quadrant id from path
+        final int quadrant = Integer.parseInt(path.split("/")[1].split("-Q")[1].split("_")[0]);
+
+        // read file
+        final List<String> map;
+        try {
+            map = Files.readAllLines(Path.of(path));
+        } catch (IOException e) {
+            Utils.logTS("Error reading file: " + path + " Stacktrace: " + e);
+            return null;
+        }
+
+        return new Quadrant(planet, quadrant, map);
     }
 
     public double getValueIndex() {

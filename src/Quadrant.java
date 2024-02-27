@@ -1,4 +1,8 @@
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Quadrant {
     // fixed values
@@ -18,19 +22,7 @@ public class Quadrant {
     private final char[][] map;
 
     public Quadrant(String planetName, int quadrantIndex, List<String> mapList) {
-        /*
-        this.path = path.replace('\\', '/'); // Clean input
 
-        List<String> lines = null;
-        try {
-            lines = Files.readAllLines(Path.of(this.path));
-        } catch (IOException e) {
-            System.out.println("Error reading " + this.path + " : " + e);
-        }
-
-        this.mapLines = Objects.requireNonNullElseGet(lines, ArrayList::new);
-
-         */
         this.planetName = planetName;
         this.quadrantIndex = quadrantIndex;
 
@@ -95,24 +87,35 @@ public class Quadrant {
         return total;
     }
 
-    public String getPlanetName() {
-        /*
-        if (this.planetName == null) {
-            String[] fArr = this.path.split("/");
-            this.planetName = fArr[fArr.length - 1].split("-")[0];
+    public Point[] getResourcePositions(char resourceID) {
+        // go over map and save coordinates where you find the resource
+        List<Point> points = new ArrayList<>();
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                if(map[y][x] == resourceID) points.add(new Point(x, y));
+            }
         }
-        */
+
+        return points.toArray(new Point[0]);
+    }
+
+    public Map<Point, Character> getAllResourcePositions() {
+        // get a map of all points with a resource and the present resource
+        Map<Point, Character> resorcePositions = new HashMap<>();
+        for (int y = 0; y < getHeight(); y++) {
+            for (int x = 0; x < getWidth(); x++) {
+                if(map[y][x] != 'x') resorcePositions.put(new Point(x, y), map[y][x]);
+            }
+        }
+
+        return resorcePositions;
+    }
+
+    public String getPlanetName() {
         return this.planetName == null ? "" : this.planetName;
     }
 
     public int getQuadrant() {
-        /*
-        if (this.quadrant == null) {
-
-            String[] fArr = this.path.split("/");
-            this.quadrant = Integer.valueOf(fArr[fArr.length - 1].split("-Q")[1].split("_")[0]);
-        }
-         */
         return this.quadrantIndex;
     }
 

@@ -1,3 +1,6 @@
+import java.awt.Point;
+import java.util.Arrays;
+
 public class Main {
     public static void main(String[] args) {
         //EinlesenDemo.einlesen();
@@ -15,5 +18,9 @@ public class Main {
         System.out.println("Value Index: " + q.getValueIndex());
         System.out.println("Resource Count Gold: " + q.getResourceCount('g'));
         System.out.println("Resource Density Gold: " + q.getResourceDensity('g'));
+        System.out.println("Positions of Gold:");
+        for (Point p : q.getResourcePositions('g')) {
+            System.out.println("(" + p.x + "," + p.y + ")");
+        }
     }
 }

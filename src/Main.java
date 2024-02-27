@@ -1,5 +1,7 @@
-import java.awt.Point;
-import java.util.Arrays;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) {
@@ -7,20 +9,35 @@ public class Main {
         //DBVerbindung db = new DBVerbindung();
         //db.dbVerwenden();
 
+        try (Connection conn = Utils.dbConnectTo("data/cartography.sqlite")) {
+            assert conn != null;
+            conn.createStatement().executeQuery("PRAGMA foreign_keys = ON;"); // Needed for deletion cascade
+            Statement stmt = conn.createStatement();
+            String anfragestring = "SELECT * FROM Planets;";
+            ResultSet rset = stmt.executeQuery(anfragestring);
+
+            while (rset.next()){
+                Utils.logTS("ID: " + rset.getString("planets_id") + " | Name: " + (rset.getString("name")));
+            }
+            rset.close();
+            stmt.close();
+            conn.close();
+            Utils.logTS("Abgemeldet.\n");
+        } catch (SQLException e) {
+            Utils.logTS("SQL Error at cartography database: " + e);
+        }
+
         // "data/PlanetA-Q1_6x13.txt"
         // "data/PlanetB-Q3_16x50.txt"
         // "data/PlanetB-Q5_50x100.txt"
 
         // setup quadrant
         Quadrant q = Utils.quadrantFromFile("data/PlanetA-Q1_6x13.txt");
-        System.out.println("Name: " + q.getPlanetName());
-        System.out.println("Quadrant: Q" + q.getQuadrant());
-        System.out.println("Value Index: " + q.getValueIndex());
-        System.out.println("Resource Count Gold: " + q.getResourceCount('g'));
-        System.out.println("Resource Density Gold: " + q.getResourceDensity('g'));
-        System.out.println("Positions of Gold:");
-        for (Point p : q.getResourcePositions('g')) {
-            System.out.println("(" + p.x + "," + p.y + ")");
-        }
+        assert q != null;
+        Utils.logTS("Name: " + q.getPlanetName());
+        Utils.logTS("Quadrant: Q" + q.getQuadrant());
+        Utils.logTS("Value Index: " + q.getValueIndex());
+        Utils.logTS("Resource Count Gold: " + q.getResourceCount('g'));
+        Utils.logTS("Resource Density Gold: " + q.getResourceDensity('g'));
     }
 }

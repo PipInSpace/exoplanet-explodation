@@ -10,7 +10,7 @@ class DBVerbindung {
 
         // 1. Treiber laden und 2. Herstellen einer Verbindung mit der Datenbank
         Connection conn;
-        conn = verbindungHerstellen("data/musikgruppen.sqlite");
+        conn = Utils.dbConnectTo("data/musikgruppen.sqlite");
 
         //Die Verwendung von Datenbanken kann vielfältige Fehler erzeugen, vgl. Arbeit mit Dateien 
         try{
@@ -32,7 +32,7 @@ class DBVerbindung {
             
             // 6. Durchgehen der Ergebnismenge, solange es jeweils ein nächstes Ergebnis gibt
             while (rset.next()){
-                DBLog(rset.getString("Vorname") + ", " + (rset.getString("Nachname")));     //mit getString- bzw. getInt-Methoden des Ergebnismengen-Objekts jeweils die Daten herausholen
+                Utils.logTS(rset.getString("Vorname") + ", " + (rset.getString("Nachname")));     //mit getString- bzw. getInt-Methoden des Ergebnismengen-Objekts jeweils die Daten herausholen
             }
             
             // 7. Ergebnismenge schliessen
@@ -41,60 +41,11 @@ class DBVerbindung {
             stmt.close();
             // 9. Verbindung schliessen     
             conn.close();
-            DBLog("Abgemeldet.\n");
+            Utils.logTS("Abgemeldet.\n");
         } catch (Exception e) {
             // Fehlerbehebung
-            DBLog(e.toString());
+            Utils.logTS(e.toString());
         }
 
-    }  
-
-    /**
-     * Stellt eine Verbindung zu einer Datenbank her. 
-     * Dazu muss die Datei sqlite-jdbc-3.7.2.jar
-     * im gleichen Ordner wie die Projektdateien gespeichert werden.
-     * Die Operation gibt ein Objekt vom Typ Connection zurück und wird in der nächsten Operation verwendet 
-     * NUR NACH RÜCKSPRACHE VERÄNDERN
-     * 
-     * @param datenbank der Pfad zur Datenbank; kann absolut sein oder relativ zum aktiven Java user.dir -> in BlueJ ist dies das Projektverzeichnis
-     * @return          die aufgebaute Verbindung zur Datenbank
-     */
-    private Connection verbindungHerstellen(String datenbank) {
-        DBLog("Ich suche nach der Datenbank in: \n    "+datenbank);
-        DBLog("Verbindung zu SQLite Datenbank wird versucht.");
-
-        String treiber = "org.sqlite.JDBC"; // z.B. aus: sqlite-jdbc-3.7.2.jar
-        String praefix = "jdbc:sqlite:";  
-
-        try {
-            //1. Passenden Treiber laden
-            Class.forName(treiber);
-            //2. Verbindung zur DB erstellen
-            //user und kennwort spielen bei der SQLite Datenbank keine Rolle, sind daher null
-            Connection c = DriverManager.getConnection(praefix + datenbank, null, null);
-            DBLog("Verbindung zu SQLite Datenbank steht.");
-            // Die Verbindung wird zurückgegeben
-            return c;
-        } catch (Exception e) {
-            DBLog("Fehler beim Erstellen der Verbindung: " + e);
-            //e.printStackTrace();
-            return null;
-        }
     }
-
-    /**
-     * Dient zur Ausgabe eines Strings in einem assoziierten Fenster. 
-     * Das ist nur da, damit man die Ausgaben nicht nur auf der Konsole mitlesen kann.
-     * 
-     * @param msg Der auszugebende String.
-     */
-    private void DBLog(String msg) {
-        System.out.println(
-                "[" +
-                (new java.text.SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
-                    .format(new java.util.Date())
-                + "] " + msg
-        );
-    }
-
 }

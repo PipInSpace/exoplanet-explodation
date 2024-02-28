@@ -3,6 +3,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Utils {
     /**
@@ -42,7 +43,7 @@ public class Utils {
         List<String> filePaths = new ArrayList<>();
         final File folder = new File(path);
 
-        for (final File fileEntry : folder.listFiles()) {
+        for (final File fileEntry : Objects.requireNonNull(folder.listFiles())) {
             if (!fileEntry.isDirectory()) {
                 logTS("Opening file " + fileEntry.getPath());
                 filePaths.add(fileEntry.getPath());

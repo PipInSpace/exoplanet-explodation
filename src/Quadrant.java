@@ -39,10 +39,6 @@ public class Quadrant {
         }
     }
 
-    public char[][] getRawMap() {
-        return this.map;
-    }
-
     public static Quadrant fromFile(String path) {
         final String[] pathArr = path.replace('\\', '/').split("/");
         final String fileName = pathArr[pathArr.length - 1];
@@ -113,6 +109,23 @@ public class Quadrant {
         }
 
         return total;
+    }
+
+    /**
+     * List of all resources in a map
+     */
+    public List<Resource> getResourceList() {
+        List<Resource> resources = new ArrayList<>();
+        for (int y = 0; y < this.map[0].length; y++) {
+            for (int x = 0; x < this.map.length; x++) {
+                char ch = map[x][y];
+                if (ch == 'g' || ch == 'k' || ch == 's' || ch == 'u' || ch == 'z') {
+                    resources.add(new Resource(ch, x, y));
+                }
+            }
+        }
+
+        return resources;
     }
 
     public Point[] getResourcePositions(char resourceID) {

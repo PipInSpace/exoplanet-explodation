@@ -12,7 +12,7 @@ public class Resource {
         COPPER,
         SILVER,
         URANIUM,
-        ZINK;
+        ZINK
     }
 
     // constants
@@ -30,7 +30,7 @@ public class Resource {
     public Resource(char type, int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
-        switch (type){
+        switch (type) {
             case 'g':
                 this.type = Type.GOLD;
                 break;
@@ -82,22 +82,5 @@ public class Resource {
             }
         }
         return "";
-    }
-
-    /**
-     * List of all resources in a map
-     */
-    public static List<Resource> getResourceList(char[][] map) {
-        List<Resource> resources = new ArrayList<>();
-        for (int y = 0; y < map[0].length; y++) {
-            for (int x = 0; x < map.length; x++) {
-                char ch = map[x][y];
-                if (ch == 'g' || ch == 'k' || ch == 's' || ch == 'u' || ch == 'z') {
-                    resources.add(new Resource(ch, x, y));
-                }
-            }
-        }
-
-        return resources;
     }
 }

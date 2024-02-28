@@ -27,7 +27,7 @@ public class Main {
                 int quadrantWidth = quadrant.getWidth();
                 int quadrantHeight = quadrant.getHeight();
                 double quadrantValueIndex = quadrant.getValueIndex();
-                List<Resource> resources = Resource.getResourceList(quadrant.getRawMap());
+                List<Resource> resources = quadrant.getResourceList();
                 String stmtStr;
 
                 Utils.logTS("Working on " + quadrant.getPlanetName() + " Q" + quadrantNum);

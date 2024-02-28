@@ -13,11 +13,14 @@ public class Main {
         for (String path : quadrantPaths) {
             quadrants.add(Quadrant.fromFile(path));
         }
+        Utils.logTS("Quadrant objects created.\n");
 
         try (Connection conn = Utils.dbConnectTo("data/cartography.sqlite")) {
             assert conn != null;
+            Utils.logTS("Activating PRAGMA settings.\n");
             conn.createStatement().execute("PRAGMA foreign_keys = ON; PRAGMA foreign_keys;"); // Needed for deletion cascade
 
+            Utils.logTS("Starting database update from data files...");
             for (Quadrant quadrant : quadrants) {
                 String pName = quadrant.getPlanetName();
                 int quadrantNum = quadrant.getQuadrantNumber();
@@ -26,6 +29,8 @@ public class Main {
                 double quadrantValueIndex = quadrant.getValueIndex();
                 List<Resource> resources = Resource.getResourceList(quadrant.getRawMap());
                 String stmtStr;
+
+                Utils.logTS("Working on " + quadrant.getPlanetName() + " Q" + quadrantNum);
 
                 stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Planets WHERE name = '%s';", pName);
                 boolean planetExists = conn.createStatement().executeQuery(stmtStr).getInt("COUNT") > 0;
@@ -38,7 +43,6 @@ public class Main {
 
                 stmtStr = String.format("SELECT planets_id AS 'ID' FROM Planets WHERE name = '%s';", pName);
                 int planetID = conn.createStatement().executeQuery(stmtStr).getInt("ID");
-                Utils.logTS(quadrant.getPlanetName() + " ID is: " + planetID);
 
                 stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Planets, Quadrants WHERE Quadrants.number = '%d' AND Planets.name = '%s';", quadrantNum, pName);
                 boolean quadrantExists = conn.createStatement().executeQuery(stmtStr).getInt("COUNT") > 0;
@@ -46,10 +50,11 @@ public class Main {
                 int quadrantID;
                 if (!quadrantExists) {
                     // Create quadrant
+                    Utils.logTS("Creating Quadrant " + pName + " Q" + quadrantNum + " entry");
                     stmtStr = String.format(Locale.US, "INSERT INTO Quadrants (planet_fid, number, value_index, width, height) \nVALUES (%d, %d, %.15g, %d, %d);", planetID, quadrantNum, quadrantValueIndex, quadrantWidth, quadrantHeight);
                     conn.createStatement().execute(stmtStr);
                     // Optain ID
-                    stmtStr = String.format("SELECT quadrants_id AS 'ID' FROM Planets WHERE planet_fid = %d AND number = %d;", planetID, quadrantNum);
+                    stmtStr = String.format("SELECT quadrants_id AS 'ID' FROM Quadrants WHERE planet_fid = %d AND number = %d;", planetID, quadrantNum);
                     quadrantID = conn.createStatement().executeQuery(stmtStr).getInt("ID");
                 } else {
                     // Update quadrant
@@ -62,9 +67,17 @@ public class Main {
                     stmtStr = String.format("DELETE FROM Resources WHERE quadrant_fid = %d;", quadrantID);
                     conn.createStatement().execute(stmtStr);
                 }
+
+                // Write resources to database
+                for (Resource res : resources) {
+                    stmtStr = String.format("INSERT INTO Resources (quadrant_fid, type, coord_x, coord_y) VALUES (%d, '%s', %d, %d);", quadrantID, res.getTypeStr(), res.getCoordX(), res.getCoordY());
+                    conn.createStatement().execute(stmtStr);
+                }
             }
+            Utils.logTS("Completed database update from data files.\n");
 
             // Test Database
+            Utils.logTS("Validating database, listing content of \"Planets\" table:");
             Statement stmt = conn.createStatement();
             String anfragestring = "SELECT * FROM Planets;";
             ResultSet rset = stmt.executeQuery(anfragestring);
@@ -75,7 +88,7 @@ public class Main {
             rset.close();
             stmt.close();
             conn.close();
-            Utils.logTS("Abgemeldet.\n");
+            Utils.logTS("Closed database connection.\n");
         } catch (SQLException e) {
             Utils.logTS("SQL Error at cartography database: " + e);
             e.printStackTrace();

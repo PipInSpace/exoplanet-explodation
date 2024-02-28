@@ -89,9 +89,9 @@ public class Resource {
      */
     public static List<Resource> getResourceList(char[][] map) {
         List<Resource> resources = new ArrayList<>();
-        for (int y = 0; y < map.length; y++) {
-            for (int x = 0; x < map[0].length; x++) {
-                char ch = map[y][x];
+        for (int y = 0; y < map[0].length; y++) {
+            for (int x = 0; x < map.length; x++) {
+                char ch = map[x][y];
                 if (ch == 'g' || ch == 'k' || ch == 's' || ch == 'u' || ch == 'z') {
                     resources.add(new Resource(ch, x, y));
                 }

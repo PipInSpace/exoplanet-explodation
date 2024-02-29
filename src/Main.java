@@ -21,6 +21,7 @@ public class Main {
             conn.createStatement().execute("PRAGMA foreign_keys = ON; PRAGMA foreign_keys;"); // Needed for deletion cascade
 
             Utils.logTS("Starting database update from data files...");
+            // Loop over every quadrant and update database
             for (Quadrant quadrant : quadrants) {
                 String pName = quadrant.getPlanetName();
                 int quadrantNum = quadrant.getQuadrantNumber();
@@ -35,6 +36,7 @@ public class Main {
                 stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Planets WHERE name = '%s';", pName);
                 boolean planetExists = conn.createStatement().executeQuery(stmtStr).getInt("COUNT") > 0;
 
+                // Create planet entry if it doesn't exist already
                 if (!planetExists) {
                     Utils.logTS("Creating Planet " + pName + " entry");
                     stmtStr = String.format("INSERT INTO Planets (name) VALUES ('%s');", pName);
@@ -51,28 +53,32 @@ public class Main {
                 if (!quadrantExists) {
                     // Create quadrant
                     Utils.logTS("Creating Quadrant " + pName + " Q" + quadrantNum + " entry");
-                    stmtStr = String.format(Locale.US, "INSERT INTO Quadrants (planet_fid, number, value_index, width, height) \nVALUES (%d, %d, %.15g, %d, %d);", planetID, quadrantNum, quadrantValueIndex, quadrantWidth, quadrantHeight);
+                    stmtStr = String.format(Locale.US, "INSERT INTO Quadrants (planet_fid, number, value_index, width, height) VALUES (%d, %d, %f, %d, %d);", planetID, quadrantNum, quadrantValueIndex, quadrantWidth, quadrantHeight);
                     conn.createStatement().execute(stmtStr);
                     // Optain ID
                     stmtStr = String.format("SELECT quadrants_id AS 'ID' FROM Quadrants WHERE planet_fid = %d AND number = %d;", planetID, quadrantNum);
                     quadrantID = conn.createStatement().executeQuery(stmtStr).getInt("ID");
                 } else {
                     // Update quadrant
-                    stmtStr = String.format(Locale.US, "UPDATE Quadrants\nSET value_index = %.15g,\nwidth = %d,\nheight = %d\nWHERE planet_fid = %d AND number = %d;", quadrantValueIndex, quadrantWidth, quadrantHeight, planetID, quadrantNum);
+                    stmtStr = String.format(Locale.US, "UPDATE Quadrants SET value_index = %f, width = %d, height = %d WHERE planet_fid = %d AND number = %d;", quadrantValueIndex, quadrantWidth, quadrantHeight, planetID, quadrantNum);
                     conn.createStatement().execute(stmtStr);
                     // Optain ID
                     stmtStr = String.format("SELECT quadrants_id AS 'ID' FROM Quadrants WHERE planet_fid = %d AND number = %d;", planetID, quadrantNum);
                     quadrantID = conn.createStatement().executeQuery(stmtStr).getInt("ID");
-                    // Delete resources
+                    // Delete resources, updating would be very slow and pointless
                     stmtStr = String.format("DELETE FROM Resources WHERE quadrant_fid = %d;", quadrantID);
                     conn.createStatement().execute(stmtStr);
                 }
 
-                // Write resources to database
+                // (Re)Write resources to database
+                // This batch approach might be more efficient.
+                Statement resInsertQuery = conn.createStatement();
                 for (Resource res : resources) {
-                    stmtStr = String.format("INSERT INTO Resources (quadrant_fid, type, coord_x, coord_y) VALUES (%d, '%s', %d, %d);", quadrantID, res.getTypeStr(), res.getCoordX(), res.getCoordY());
-                    conn.createStatement().execute(stmtStr);
+                    resInsertQuery.addBatch(String.format("INSERT INTO Resources (quadrant_fid, type, coord_x, coord_y) VALUES (%d, '%s', %d, %d);\n", quadrantID, res.getTypeStr(), res.getCoordX(), res.getCoordY()));
                 }
+                int[] updates = resInsertQuery.executeBatch();
+                Utils.logTS("Added " + updates.length + " resource entries.");
+                resInsertQuery.close();
             }
             Utils.logTS("Completed database update from data files.\n");
 

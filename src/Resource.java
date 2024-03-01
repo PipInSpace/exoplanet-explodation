@@ -21,34 +21,39 @@ public class Resource {
     private static final String SILVER_STR = "SILVER";
     private static final String URANIUM_STR = "URANIUM";
     private static final String ZINC_STR = "ZINC";
+    private static final char GOLD_CHAR = 'g';
+    private static final char COPPER_CHAR = 'k';
+    private static final char SILVER_CHAR = 's';
+    private static final char URANIUM_CHAR = 'u';
+    private static final char ZINC_CHAR = 'z';
 
     // Values
     private final Type type;
     private final int coordX;
     private final int coordY;
 
-    public Resource(char type, int coordX, int coordY) {
+    public Resource(char typeCh, int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
-        switch (type) {
-            case 'g':
-                this.type = Type.GOLD;
-                break;
-            case 'k':
-                this.type = Type.COPPER;
-                break;
-            case 's':
-                this.type = Type.SILVER;
-                break;
-            case 'u':
-                this.type = Type.URANIUM;
-                break;
-            case 'z':
-            default:
-                this.type = Type.ZINK;
-                break;
-        }
+        this.type = switch (typeCh) {
+            case GOLD_CHAR -> Type.GOLD;
+            case COPPER_CHAR -> Type.COPPER;
+            case SILVER_CHAR -> Type.SILVER;
+            case URANIUM_CHAR -> Type.URANIUM;
+            default -> Type.ZINK;
+        };
+    }
 
+    public Resource(String typeStr, int coordX, int coordY) {
+        this.coordX = coordX;
+        this.coordY = coordY;
+        this.type = switch (typeStr) {
+            case GOLD_STR -> Type.GOLD;
+            case COPPER_STR -> Type.COPPER;
+            case SILVER_STR -> Type.SILVER;
+            case URANIUM_STR -> Type.URANIUM;
+            default -> Type.ZINK;
+        };
     }
 
     public Type getType() {
@@ -64,23 +69,22 @@ public class Resource {
     }
 
     public String getTypeStr() {
-        switch (this.type) {
-            case GOLD -> {
-                return GOLD_STR;
-            }
-            case COPPER -> {
-                return COPPER_STR;
-            }
-            case SILVER -> {
-                return SILVER_STR;
-            }
-            case URANIUM -> {
-                return URANIUM_STR;
-            }
-            case ZINK -> {
-                return ZINC_STR;
-            }
-        }
-        return "";
+        return switch (this.type) {
+            case GOLD -> GOLD_STR;
+            case COPPER -> COPPER_STR;
+            case SILVER -> SILVER_STR;
+            case URANIUM -> URANIUM_STR;
+            case ZINK -> ZINC_STR;
+        };
+    }
+
+    public char getTypeChar() {
+        return switch (this.type) {
+            case GOLD -> GOLD_CHAR;
+            case COPPER -> COPPER_CHAR;
+            case SILVER -> SILVER_CHAR;
+            case URANIUM -> URANIUM_CHAR;
+            case ZINK -> ZINC_CHAR;
+        };
     }
 }

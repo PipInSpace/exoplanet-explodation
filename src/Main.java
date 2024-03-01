@@ -13,9 +13,11 @@ public class Main {
         // "data/PlanetA-Q1_6x13.txt"
         // "data/PlanetB-Q3_16x50.txt"
         // "data/PlanetB-Q5_50x100.txt"
+        Connection conn = Utils.dbConnectTo("data/cartography.sqlite");
+        assert conn != null;
 
         // setup quadrant
-        Quadrant q = Quadrant.fromFile("data/quadrants/PlanetA-Q1_6x13.txt");
+        Quadrant q = fetchQuadrantFromDB(conn, 1);
         assert q != null;
         Utils.logTS("Name: " + q.getPlanetName());
         Utils.logTS("Quadrant: Q" + q.getQuadrantNumber());
@@ -64,7 +66,7 @@ public class Main {
                 stmtStr = String.format("SELECT planets_id AS 'ID' FROM Planets WHERE name = '%s';", pName);
                 int planetID = conn.createStatement().executeQuery(stmtStr).getInt("ID");
 
-                stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Planets, Quadrants WHERE Quadrants.number = '%d' AND Planets.name = '%s';", quadrantNum, pName);
+                stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Quadrants WHERE Quadrants.number = %d AND Quadrants.planet_fid = %d;", quadrantNum, planetID);
                 boolean quadrantExists = conn.createStatement().executeQuery(stmtStr).getInt("COUNT") > 0;
 
                 int quadrantID;
@@ -117,5 +119,36 @@ public class Main {
             Utils.logTS("SQL Error at cartography database: " + e);
             e.printStackTrace();
         }
+    }
+
+    public static Quadrant fetchQuadrantFromDB(Connection conn, int quadId) {
+        try {
+            String stmtString = String.format("SELECT planet_fid, number, value_index, width, height FROM Quadrants WHERE quadrants_id = %d", quadId);
+            ResultSet rset = conn.createStatement().executeQuery(stmtString);
+
+            if (rset.next()) {
+                int planetFID = rset.getInt("planet_fid");
+                int quadNum = rset.getInt("number");
+                double quadValueInd = rset.getDouble("value_index");
+                int quadWidth = rset.getInt("width");
+                int quadHeight = rset.getInt("height");
+
+                stmtString = String.format("SELECT name FROM Planets WHERE planets_id = %d", planetFID);
+                String planetName = conn.createStatement().executeQuery(stmtString).getString("name");
+
+                stmtString = String.format("SELECT type, coord_x, coord_y FROM Resources WHERE quadrant_fid = %d", quadId);
+                rset = conn.createStatement().executeQuery(stmtString);
+                List<Resource> resources = new ArrayList<>();
+                while (rset.next()) {
+                    resources.add(new Resource(rset.getString("type"), rset.getInt("coord_x"), rset.getInt("coord_y")));
+                }
+
+                return new Quadrant(planetName, quadNum, quadWidth, quadHeight, resources);
+            }
+        } catch (SQLException e) {
+            Utils.logTS("SQL Error at cartography database: " + e);
+            e.printStackTrace();
+        }
+        return null;
     }
 }

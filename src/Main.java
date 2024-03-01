@@ -8,7 +8,25 @@ import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
-        List<String> quadrantPaths = Utils.openFolder("data/quadrants");
+        updateDatabase("data/quadrants");
+
+        // "data/PlanetA-Q1_6x13.txt"
+        // "data/PlanetB-Q3_16x50.txt"
+        // "data/PlanetB-Q5_50x100.txt"
+
+        // setup quadrant
+        Quadrant q = Quadrant.fromFile("data/quadrants/PlanetA-Q1_6x13.txt");
+        assert q != null;
+        Utils.logTS("Name: " + q.getPlanetName());
+        Utils.logTS("Quadrant: Q" + q.getQuadrantNumber());
+        Utils.logTS("Value Index: " + q.getValueIndex());
+        Utils.logTS("Resource Count Gold: " + q.getResourceCount('g'));
+        Utils.logTS("Resource Density Gold: " + q.getResourceDensity('g'));
+    }
+
+    public static void updateDatabase(String dataPath) {
+        Utils.logTS("Updating database from raw data: " + dataPath);
+        List<String> quadrantPaths = Utils.openFolder(dataPath);
         List<Quadrant> quadrants = new ArrayList<>();
         for (String path : quadrantPaths) {
             quadrants.add(Quadrant.fromFile(path));
@@ -99,18 +117,5 @@ public class Main {
             Utils.logTS("SQL Error at cartography database: " + e);
             e.printStackTrace();
         }
-
-        // "data/PlanetA-Q1_6x13.txt"
-        // "data/PlanetB-Q3_16x50.txt"
-        // "data/PlanetB-Q5_50x100.txt"
-
-        // setup quadrant
-        Quadrant q = Quadrant.fromFile(quadrantPaths.getFirst());
-        assert q != null;
-        Utils.logTS("Name: " + q.getPlanetName());
-        Utils.logTS("Quadrant: Q" + q.getQuadrantNumber());
-        Utils.logTS("Value Index: " + q.getValueIndex());
-        Utils.logTS("Resource Count Gold: " + q.getResourceCount('g'));
-        Utils.logTS("Resource Density Gold: " + q.getResourceDensity('g'));
     }
 }

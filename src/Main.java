@@ -8,16 +8,14 @@ import java.util.Locale;
 
 public class Main {
     public static void main(String[] args) {
-        updateDatabase("data/quadrants");
+        // Update Database
+        updateDatabase("data/cartography.sqlite", "data/quadrants");
 
-        // "data/PlanetA-Q1_6x13.txt"
-        // "data/PlanetB-Q3_16x50.txt"
-        // "data/PlanetB-Q5_50x100.txt"
-        Connection conn = Utils.dbConnectTo("data/cartography.sqlite");
-        assert conn != null;
+        // Fetch from database
+        List<Quadrant> quadrants = quadrantsListFromDB("data/cartography.sqlite");
 
-        // setup quadrant
-        Quadrant q = fetchQuadrantFromDB(conn, 1);
+        // Print quadrant
+        Quadrant q = quadrants.getFirst();
         assert q != null;
         Utils.logTS("Name: " + q.getPlanetName());
         Utils.logTS("Quadrant: Q" + q.getQuadrantNumber());
@@ -26,7 +24,7 @@ public class Main {
         Utils.logTS("Resource Density Gold: " + q.getResourceDensity('g'));
     }
 
-    public static void updateDatabase(String dataPath) {
+    public static void updateDatabase(String dbPath, String dataPath) {
         Utils.logTS("Updating database from raw data: " + dataPath);
         List<String> quadrantPaths = Utils.openFolder(dataPath);
         List<Quadrant> quadrants = new ArrayList<>();
@@ -35,7 +33,7 @@ public class Main {
         }
         Utils.logTS("Quadrant objects created.\n");
 
-        try (Connection conn = Utils.dbConnectTo("data/cartography.sqlite")) {
+        try (Connection conn = Utils.dbConnectTo(dbPath)) {
             assert conn != null;
             Utils.logTS("Activating PRAGMA settings.\n");
             conn.createStatement().execute("PRAGMA foreign_keys = ON; PRAGMA foreign_keys;"); // Needed for deletion cascade
@@ -93,35 +91,46 @@ public class Main {
                 // (Re)Write resources to database
                 // This batch approach might be more efficient.
                 Statement resInsertQuery = conn.createStatement();
+                resInsertQuery.addBatch("BEGIN;");
                 for (Resource res : resources) {
                     resInsertQuery.addBatch(String.format("INSERT INTO Resources (quadrant_fid, type, coord_x, coord_y) VALUES (%d, '%s', %d, %d);\n", quadrantID, res.getTypeStr(), res.getCoordX(), res.getCoordY()));
                 }
+                resInsertQuery.addBatch("COMMIT;");
                 int[] updates = resInsertQuery.executeBatch();
                 Utils.logTS("Added " + updates.length + " resource entries.");
                 resInsertQuery.close();
             }
-            Utils.logTS("Completed database update from data files.\n");
-
-            // Test Database
-            Utils.logTS("Validating database, listing content of \"Planets\" table:");
-            Statement stmt = conn.createStatement();
-            String anfragestring = "SELECT * FROM Planets;";
-            ResultSet rset = stmt.executeQuery(anfragestring);
-
-            while (rset.next()){
-                Utils.logTS("ID: " + rset.getString("planets_id") + " | Name: " + (rset.getString("name")));
-            }
-            rset.close();
-            stmt.close();
+            Utils.logTS("Completed database update from data files.");
             conn.close();
             Utils.logTS("Closed database connection.\n");
         } catch (SQLException e) {
-            Utils.logTS("SQL Error at cartography database: " + e);
-            e.printStackTrace();
+            Utils.logTS("SQL Error at cartography database while updating quadrants: " + e);
         }
     }
 
-    public static Quadrant fetchQuadrantFromDB(Connection conn, int quadId) {
+    public static List<Quadrant> quadrantsListFromDB(String dbPath) {
+        Utils.logTS("Fetching all quadrants from database...");
+        List<Quadrant> quadrants = new ArrayList<>();
+
+        try (Connection conn = Utils.dbConnectTo(dbPath)) {
+            assert conn != null;
+
+            String stmtString = "SELECT quadrants_id FROM Quadrants";
+            ResultSet rset = conn.createStatement().executeQuery(stmtString);
+            while (rset.next()) {
+                Quadrant quadrant = quadrantFromDB(conn, rset.getInt("quadrants_id"));
+                if (quadrant != null) quadrants.add(quadrant);
+            }
+            Utils.logTS("Closed database connection.\n");
+        } catch (SQLException e) {
+            Utils.logTS("SQL Error at cartography database while fetching quadrants: " + e);
+        }
+
+        return quadrants;
+    }
+
+    public static Quadrant quadrantFromDB(Connection conn, int quadId) {
+        Utils.logTS("Fetching quadrant id " + quadId);
         try {
             String stmtString = String.format("SELECT planet_fid, number, value_index, width, height FROM Quadrants WHERE quadrants_id = %d", quadId);
             ResultSet rset = conn.createStatement().executeQuery(stmtString);
@@ -129,7 +138,6 @@ public class Main {
             if (rset.next()) {
                 int planetFID = rset.getInt("planet_fid");
                 int quadNum = rset.getInt("number");
-                double quadValueInd = rset.getDouble("value_index");
                 int quadWidth = rset.getInt("width");
                 int quadHeight = rset.getInt("height");
 
@@ -143,11 +151,11 @@ public class Main {
                     resources.add(new Resource(rset.getString("type"), rset.getInt("coord_x"), rset.getInt("coord_y")));
                 }
 
+                rset.close();
                 return new Quadrant(planetName, quadNum, quadWidth, quadHeight, resources);
             }
         } catch (SQLException e) {
-            Utils.logTS("SQL Error at cartography database: " + e);
-            e.printStackTrace();
+            Utils.logTS("SQL Error at cartography database while fetching quadrant: " + e);
         }
         return null;
     }

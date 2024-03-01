@@ -17,9 +17,6 @@ public class Utils {
      * @return          die aufgebaute Verbindung zur Datenbank
      */
     public static Connection dbConnectTo(String dbPath) {
-        Utils.logTS("Searching vor database in: \n    "+dbPath);
-        Utils.logTS("Attempting connection to SQLite database.");
-
         String treiber = "org.sqlite.JDBC"; // z.B. aus: sqlite-jdbc-3.7.2.jar
         String praefix = "jdbc:sqlite:";
 
@@ -29,7 +26,7 @@ public class Utils {
             //2. Verbindung zur DB erstellen
             //user und kennwort spielen bei der SQLite Datenbank keine Rolle, sind daher null
             Connection c = DriverManager.getConnection(praefix + dbPath, null, null);
-            Utils.logTS("Connected to SQLite database.");
+            Utils.logTS("Connected to SQLite database at " + dbPath);
             // Die Verbindung wird zurückgegeben
             return c;
         } catch (Exception e) {

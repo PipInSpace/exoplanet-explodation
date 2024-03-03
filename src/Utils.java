@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.List;
 import java.io.File;
 import java.sql.Connection;
@@ -48,6 +49,29 @@ public class Utils {
         }
 
         return filePaths;
+    }
+
+    public static void printQuadrantInfo(Quadrant q) {
+        System.out.println("Lade " + q.getPlanetName() + ", Quadrant " + q.getQuadrantNumber() + ":");
+        System.out.println("Breite: " + q.getWidth() + ", Höhe: " + q.getHeight());
+        System.out.println("Gesamtwertindex: " + q.getValueIndex());
+        System.out.println("Resourcen:");
+        // iterate over all resources
+        for (char c : new char[]{'g', 'k', 's', 'u', 'z'}) {
+            // getting recource name from char is very scuffed
+            System.out.println("    " + new Resource(c, 0, 0).getTypeStr() +": Anzahl: " + q.getResourceCount(c) + ", Dichte: " + q.getResourceDensity(c));
+            if(q.getResourceCount(c) > 0) {
+                System.out.println("    Positionen:");
+                for(Point p : q.getResourcePositions(c)) {
+                    System.out.println("      " + Utils.pointAsString(p));
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public static String pointAsString(Point p) {
+        return String.format("(%d, %d)", p.x, p.y);
     }
 
     /**

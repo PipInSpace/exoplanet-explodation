@@ -17,11 +17,7 @@ public class Main {
         // Print quadrant
         Quadrant q = quadrants.getFirst();
         assert q != null;
-        Utils.logTS("Name: " + q.getPlanetName());
-        Utils.logTS("Quadrant: Q" + q.getQuadrantNumber());
-        Utils.logTS("Value Index: " + q.getValueIndex());
-        Utils.logTS("Resource Count Gold: " + q.getResourceCount('g'));
-        Utils.logTS("Resource Density Gold: " + q.getResourceDensity('g'));
+        Utils.printQuadrantInfo(q);
     }
 
     public static void updateDatabase(String dbPath, String dataPath) {

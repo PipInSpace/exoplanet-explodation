@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.List;
 
 public class Main {
@@ -13,15 +14,7 @@ public class Main {
         for(String path : paths) {
             Quadrant q = Quadrant.fromFile(path);
             assert q != null;
-            System.out.println("Loading " + q.getPlanetName() + ", Quadrant " + q.getQuadrant() + ":");
-            System.out.println("Width: " + q.getWidth() + ", Height: " + q.getHeight());
-            System.out.println("Total Value Index: " + q.getValueIndex());
-            System.out.println("Resorces:");
-            // iterate over all resources
-            for (char c : new char[]{'g', 'k', 's', 'u', 'z'}) {
-                System.out.println("    " + c +": Total: " + q.getResourceCount(c) + ", Density: " + q.getResourceDensity(c));
-            }
-            System.out.println();
+            Utils.printQuadrantInfo(q);
         }
         /*
         Utils.logTS("Name: " + q.getPlanetName());

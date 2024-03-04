@@ -1,11 +1,8 @@
-import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Quadrant {
     // fixed values
@@ -24,6 +21,12 @@ public class Quadrant {
     //private final String path;
     private final char[][] map;
 
+    /**
+     * Creates a new Quadrant based on List of String representing the map of the quadrant
+     * @param planetName Name of planet
+     * @param quadrantIndex Number of quadrant on the planet
+     * @param mapList List of String containing map, must be rectangular to avoid unexpected behaviour
+     */
     public Quadrant(String planetName, int quadrantIndex, List<String> mapList) {
 
         this.planetName = planetName;
@@ -39,6 +42,11 @@ public class Quadrant {
         }
     }
 
+    /**
+     * Creates a new Quadrant base on a file
+     * @param path Path to the file
+     * @return Quadrant containing info of file
+     */
     public static Quadrant fromFile(String path) {
         final String[] pathArr = path.replace('\\', '/').split("/");
         final String fileName = pathArr[pathArr.length - 1];
@@ -60,11 +68,19 @@ public class Quadrant {
         return new Quadrant(planet, quadrant, map);
     }
 
+    /**
+     * Calculates value index based on density and type of all resources in the quadrant
+     * @return value index
+     */
     public double getValueIndex() {
         // get average value per point in the whole quadrant
         return getRawValueIndex() / ((double) (getWidth() * getHeight()));
     }
 
+    /**
+     * Calculates value index based on total count and type  of all resources in the quadrant
+     * @return raw value index (not accounting for quadrant size)
+     */
     public double getRawValueIndex() {
         // go over each point and add the found recource's value
         double rawIndex = 0.0;
@@ -94,52 +110,71 @@ public class Quadrant {
         return rawIndex;
     }
 
-    public double getResourceDensity(char resourceID) {
+    /**
+     * Calculates density of one resource in a quadrant
+     * @param resourceType type to calculate density of
+     * @return density (resources/point)
+     */
+    public double getResourceDensity(Resource.ResourceType resourceType) {
         // get density of a selected resource
-        return ((double)getResourceCount(resourceID)) / ((double) (getWidth() * getHeight()));
+        return ((double)getResourceCount(resourceType)) / ((double) (getWidth() * getHeight()));
     }
 
-    public int getResourceCount(char resourceID) {
+    /**
+     * Calculates total count of one resource in the quadrant
+     * @param resourceType type to count
+     * @return count
+     */
+    public int getResourceCount(Resource.ResourceType resourceType) {
         // get density of a selected resource
         int total = 0;
         for (char[] r : this.map) {
             for (char c : r) {
-                if(c == resourceID) total++;
+                if(Resource.charToResourceType(c) == resourceType) total++;
             }
         }
 
         return total;
     }
 
-    public Point[] getResourcePositions(char resourceID) {
+    /**
+     * Gets an array of all resources in the quadrant of one type
+     * @param resourceType type to search for
+     * @return Resource array of type
+     */
+    public Resource[] getResourcesOfType(Resource.ResourceType resourceType) {
         // go over map and save coordinates where you find the resource
-        List<Point> points = new ArrayList<>();
+        List<Resource> resources = new ArrayList<>();
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                if(map[x][y] == resourceID) points.add(new Point(x, y));
+                if(Resource.charToResourceType(map[x][y]) == resourceType) resources.add(new Resource(resourceType, x, y));
             }
         }
 
-        return points.toArray(new Point[0]);
+        return resources.toArray(new Resource[0]);
     }
 
-    public Map<Point, Character> getAllResourcePositions() {
+    /**
+     * Gets an array of all resources in the quadrant
+     * @return Resource array of all resources excluding none
+     */
+    public Resource[] getAllResources() {
         // get a map of all points with a resource and the present resource
-        Map<Point, Character> resorcePositions = new HashMap<>();
+        List<Resource> resorces = new ArrayList<>();
         for (int y = 0; y < getHeight(); y++) {
             for (int x = 0; x < getWidth(); x++) {
-                if(map[x][y] != 'x') resorcePositions.put(new Point(x, y), map[x][y]);
+                if(map[x][y] != 'x') resorces.add(new Resource(map[x][y], x, y));
             }
         }
 
-        return resorcePositions;
+        return resorces.toArray(new Resource[0]);
     }
 
     public String getPlanetName() {
         return this.planetName == null ? "" : this.planetName;
     }
 
-    public int getQuadrant() {
+    public int getQuadrantNumber() {
         return this.quadrantIndex;
     }
 

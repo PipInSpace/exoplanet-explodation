@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Point;
 import java.util.List;
 import java.io.File;
 import java.sql.Connection;
@@ -39,6 +39,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Gets the paths to all files in a folder, ignores subfolders
+     *
+     * @param path The path of the selected folder
+     * @return List of paths
+     */
     public static List<String> openFolder(String path) {
         List<String> filePaths = new ArrayList<>();
         final File folder = new File(path);
@@ -53,37 +59,37 @@ public class Utils {
         return filePaths;
     }
 
+    /**
+     * Formats the coordinates of a Point for easy printing to console
+     * Format: (x, y)
+     * @param p Point to be converted
+     * @return Formatted coordinates
+     */
     public static String pointAsString(Point p) {
         return String.format("(%d, %d)", p.x, p.y);
     }
 
+    /**
+     * Prints all relevant information about a Quadrant to the console
+     * @param q Quadrant to be printed
+     */
     public static void printQuadrantInfo(Quadrant q) {
-        System.out.println("Lade " + q.getPlanetName() + ", Quadrant " + q.getQuadrant() + ":");
+        System.out.println("Lade " + q.getPlanetName() + ", Quadrant " + q.getQuadrantNumber() + ":");
         System.out.println("Breite: " + q.getWidth() + ", Höhe: " + q.getHeight());
         System.out.println("Gesamtwertindex: " + q.getValueIndex());
         System.out.println("Resourcen:");
         // iterate over all resources
-        for (char c : new char[]{'g', 'k', 's', 'u', 'z'}) {
-            System.out.println("    " + resourceName(c) +": Anzahl: " + q.getResourceCount(c) + ", Dichte: " + q.getResourceDensity(c));
-            if(q.getResourceCount(c) > 0) {
+        for (Resource.ResourceType rType : Resource.ResourceType.values()) {
+            if(rType == Resource.ResourceType.NONE) continue; // skip none
+            System.out.println("    " + Resource.resourceTypeToName(rType) +": Anzahl: " + q.getResourceCount(rType) + ", Dichte: " + q.getResourceDensity(rType));
+            if(q.getResourceCount(rType) > 0) {
                 System.out.println("    Positionen:");
-                for(Point p : q.getResourcePositions(c)) {
-                    System.out.println("      " + Utils.pointAsString(p));
+                for(Resource r : q.getResourcesOfType(rType)) {
+                    System.out.println("      " + Utils.pointAsString(r.getPosition()));
                 }
             }
         }
         System.out.println();
-    }
-
-    private static String resourceName(char resourceID) {
-        return switch (resourceID) {
-            case 'g' -> "Gold";
-            case 'k' -> "Kupfer";
-            case 's' -> "Silber";
-            case 'u' -> "Uran";
-            case 'z' -> "Zink";
-            default -> "";
-        };
     }
 
     /**

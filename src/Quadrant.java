@@ -3,9 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Quadrant {
     // fixed values
@@ -156,18 +154,6 @@ public class Quadrant {
         }
 
         return points.toArray(new Point[0]);
-    }
-
-    public Map<Point, Character> getAllResourcePositions() {
-        // get a map of all points with a resource and the present resource
-        Map<Point, Character> resorcePositions = new HashMap<>();
-        for (int y = 0; y < getHeight(); y++) {
-            for (int x = 0; x < getWidth(); x++) {
-                if(map[x][y] != 'x') resorcePositions.put(new Point(x, y), map[x][y]);
-            }
-        }
-
-        return resorcePositions;
     }
 
     public String getPlanetName() {

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The Resource Class contains a resource type enum and coordinates.
  * It provides methods to convert the type enum to a String for database use;

@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The Resource Class contains a resource type enum and coordinates.
  * It provides methods to convert the type enum to a String for database use;
@@ -12,7 +9,7 @@ public class Resource {
         COPPER,
         SILVER,
         URANIUM,
-        ZINK
+        ZINC
     }
 
     // constants
@@ -40,7 +37,7 @@ public class Resource {
             case COPPER_CHAR -> Type.COPPER;
             case SILVER_CHAR -> Type.SILVER;
             case URANIUM_CHAR -> Type.URANIUM;
-            default -> Type.ZINK;
+            default -> Type.ZINC;
         };
     }
 
@@ -52,7 +49,7 @@ public class Resource {
             case COPPER_STR -> Type.COPPER;
             case SILVER_STR -> Type.SILVER;
             case URANIUM_STR -> Type.URANIUM;
-            default -> Type.ZINK;
+            default -> Type.ZINC;
         };
     }
 
@@ -74,7 +71,7 @@ public class Resource {
             case COPPER -> COPPER_STR;
             case SILVER -> SILVER_STR;
             case URANIUM -> URANIUM_STR;
-            case ZINK -> ZINC_STR;
+            case ZINC -> ZINC_STR;
         };
     }
 
@@ -84,7 +81,7 @@ public class Resource {
             case COPPER -> COPPER_CHAR;
             case SILVER -> SILVER_CHAR;
             case URANIUM -> URANIUM_CHAR;
-            case ZINK -> ZINC_CHAR;
+            case ZINC -> ZINC_CHAR;
         };
     }
 }

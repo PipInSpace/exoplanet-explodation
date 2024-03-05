@@ -111,7 +111,7 @@ public class Main {
         try (Connection conn = Utils.dbConnectTo(dbPath)) {
             assert conn != null;
 
-            String stmtString = "SELECT quadrants_id FROM Quadrants";
+            String stmtString = "SELECT quadrants_id FROM Quadrants;";
             ResultSet rset = conn.createStatement().executeQuery(stmtString);
             while (rset.next()) {
                 Quadrant quadrant = quadrantFromDB(conn, rset.getInt("quadrants_id"));
@@ -128,7 +128,7 @@ public class Main {
     public static Quadrant quadrantFromDB(Connection conn, int quadId) {
         Utils.logTS("Fetching quadrant id " + quadId);
         try {
-            String stmtString = String.format("SELECT planet_fid, number, value_index, width, height FROM Quadrants WHERE quadrants_id = %d", quadId);
+            String stmtString = String.format("SELECT planet_fid, number, value_index, width, height FROM Quadrants WHERE quadrants_id = %d;", quadId);
             ResultSet rset = conn.createStatement().executeQuery(stmtString);
 
             if (rset.next()) {
@@ -137,10 +137,10 @@ public class Main {
                 int quadWidth = rset.getInt("width");
                 int quadHeight = rset.getInt("height");
 
-                stmtString = String.format("SELECT name FROM Planets WHERE planets_id = %d", planetFID);
+                stmtString = String.format("SELECT name FROM Planets WHERE planets_id = %d;", planetFID);
                 String planetName = conn.createStatement().executeQuery(stmtString).getString("name");
 
-                stmtString = String.format("SELECT type, coord_x, coord_y FROM Resources WHERE quadrant_fid = %d", quadId);
+                stmtString = String.format("SELECT type, coord_x, coord_y FROM Resources WHERE quadrant_fid = %d;", quadId);
                 rset = conn.createStatement().executeQuery(stmtString);
                 List<Resource> resources = new ArrayList<>();
                 while (rset.next()) {

@@ -9,7 +9,8 @@ public class Resource {
         COPPER,
         SILVER,
         URANIUM,
-        ZINC
+        ZINC,
+        NONE
     }
 
     // constants
@@ -37,7 +38,8 @@ public class Resource {
             case COPPER_CHAR -> Type.COPPER;
             case SILVER_CHAR -> Type.SILVER;
             case URANIUM_CHAR -> Type.URANIUM;
-            default -> Type.ZINC;
+            case ZINC_CHAR -> Type.ZINC;
+            default -> Type.NONE;
         };
     }
 
@@ -49,7 +51,8 @@ public class Resource {
             case COPPER_STR -> Type.COPPER;
             case SILVER_STR -> Type.SILVER;
             case URANIUM_STR -> Type.URANIUM;
-            default -> Type.ZINC;
+            case ZINC_STR -> Type.ZINC;
+            default -> Type.NONE;
         };
     }
 
@@ -72,6 +75,7 @@ public class Resource {
             case SILVER -> SILVER_STR;
             case URANIUM -> URANIUM_STR;
             case ZINC -> ZINC_STR;
+            default -> "";
         };
     }
 
@@ -82,6 +86,18 @@ public class Resource {
             case SILVER -> SILVER_CHAR;
             case URANIUM -> URANIUM_CHAR;
             case ZINC -> ZINC_CHAR;
+            default -> 'x';
+        };
+    }
+
+    public static Type charToType(char c) {
+        return switch (c) {
+            case GOLD_CHAR -> Type.GOLD;
+            case COPPER_CHAR -> Type.COPPER;
+            case SILVER_CHAR -> Type.SILVER;
+            case URANIUM_CHAR -> Type.URANIUM;
+            case ZINC_CHAR -> Type.ZINC;
+            default -> Type.ZINC;
         };
     }
 }

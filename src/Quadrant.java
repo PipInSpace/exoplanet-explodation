@@ -22,6 +22,12 @@ public class Quadrant {
     //private final String path;
     private final char[][] map;
 
+    /**
+     * Konstruktor aus Planetenname, Nummer und rohen Text-Daten.
+     * @param planetName Planetenname, aus Dateiname ausgelesen
+     * @param quadrantIndex Quadrantennummer, aus Dateiname ausgelesen
+     * @param mapList Rohe Text-Daten, aus Datei ausgelesen
+     */
     public Quadrant(String planetName, int quadrantIndex, List<String> mapList) {
 
         this.planetName = planetName;
@@ -37,6 +43,12 @@ public class Quadrant {
         }
     }
 
+    /**
+     * Konstruktor aus Planetenname, Nummer und Liste an Resourcen.
+     * @param planetName Planetenname, aus Datenbank ausgelesen
+     * @param quadrantIndex Quadrantennummer, aus Datenbank ausgelesen
+     * @param resources Liste an Resourcen, aus Datenbank ausgelesen
+     */
     public Quadrant(String planetName, int quadrantIndex, int width, int height, List<Resource> resources) {
         this.planetName = planetName;
         this.quadrantIndex = quadrantIndex;
@@ -55,6 +67,11 @@ public class Quadrant {
         this.map = map;
     }
 
+    /**
+     * Erstellt einen Quadranten aus einer Text-Datei mit bestimmtem Namen.
+     * @param path Dateipfad zur Quadranten-Datei
+     * @return Ausgelesener Quadrant
+     */
     public static Quadrant fromFile(String path) {
         final String[] pathArr = path.replace('\\', '/').split("/");
         final String fileName = pathArr[pathArr.length - 1];
@@ -76,11 +93,19 @@ public class Quadrant {
         return new Quadrant(planet, quadrant, map);
     }
 
+    /**
+     * Gibt einen Wert-Index aus Resourcendichte und -wert zurück.
+     * @return Wertung des Quadranten
+     */
     public double getValueIndex() {
         // get average value per point in the whole quadrant
         return getRawValueIndex() / ((double) (getWidth() * getHeight()));
     }
 
+    /**
+     * Gibt einen Wert-Index aus dem gesamten Resourcenwert zurück.
+     * @return Rohe Wertung des Quadranten
+     */
     public double getRawValueIndex() {
         // go over each point and add the found recource's value
         double rawIndex = 0.0;
@@ -110,11 +135,21 @@ public class Quadrant {
         return rawIndex;
     }
 
+    /**
+     * Gibt die Dichte einer bestimmten Resource in einem Quadranten zurück.
+     * @param resourceID Gesuchte Resource als char
+     * @return Dichte der Resource
+     */
     public double getResourceDensity(char resourceID) {
         // get density of a selected resource
         return ((double)getResourceCount(resourceID)) / ((double) (getWidth() * getHeight()));
     }
 
+    /**
+     * Gibt die Gesamtanzahl einer bestimmten Resource in einem Quadranten zurück.
+     * @param resourceID Gesuchte Resource als char
+     * @return Gesamtanzahl der Resource
+     */
     public int getResourceCount(char resourceID) {
         // get density of a selected resource
         int total = 0;
@@ -128,7 +163,8 @@ public class Quadrant {
     }
 
     /**
-     * List of all resources in a map
+     * Gibt eine Liste aller Resourcen in einem Quadranten zurück.
+     * @return Liste an Resourcen
      */
     public List<Resource> getResourceList() {
         List<Resource> resources = new ArrayList<>();
@@ -144,6 +180,11 @@ public class Quadrant {
         return resources;
     }
 
+    /**
+     * Gibt ein Array an Koordinaten zurück, an denen sich eine bestimmte Resource befindet.
+     * @param resourceID Gesuchte Resource als char
+     * @return Array an Punkten, an denen die Resource vorhanden ist.
+     */
     public Point[] getResourcePositions(char resourceID) {
         // go over map and save coordinates where you find the resource
         List<Point> points = new ArrayList<>();

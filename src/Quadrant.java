@@ -24,6 +24,7 @@ public class Quadrant {
 
     /**
      * Konstruktor aus Planetenname, Nummer und rohen Text-Daten.
+     * 
      * @param planetName Planetenname, aus Dateiname ausgelesen
      * @param quadrantIndex Quadrantennummer, aus Dateiname ausgelesen
      * @param mapList Rohe Text-Daten, aus Datei ausgelesen
@@ -45,6 +46,7 @@ public class Quadrant {
 
     /**
      * Konstruktor aus Planetenname, Nummer und Liste an Resourcen.
+     * 
      * @param planetName Planetenname, aus Datenbank ausgelesen
      * @param quadrantIndex Quadrantennummer, aus Datenbank ausgelesen
      * @param resources Liste an Resourcen, aus Datenbank ausgelesen
@@ -69,6 +71,7 @@ public class Quadrant {
 
     /**
      * Erstellt einen Quadranten aus einer Text-Datei mit bestimmtem Namen.
+     * 
      * @param path Dateipfad zur Quadranten-Datei
      * @return Ausgelesener Quadrant
      */
@@ -95,6 +98,7 @@ public class Quadrant {
 
     /**
      * Gibt einen Wert-Index aus Resourcendichte und -wert zurück.
+     * 
      * @return Wertung des Quadranten
      */
     public double getValueIndex() {
@@ -104,6 +108,7 @@ public class Quadrant {
 
     /**
      * Gibt einen Wert-Index aus dem gesamten Resourcenwert zurück.
+     * 
      * @return Rohe Wertung des Quadranten
      */
     public double getRawValueIndex() {
@@ -111,25 +116,14 @@ public class Quadrant {
         double rawIndex = 0.0;
         for (char[] line : this.map) {
             for (char ch : line) {
-                switch (ch){
-                    case 'g':
-                        rawIndex += GOLD_VALUE;
-                        break;
-                    case 'k':
-                        rawIndex += COPPER_VALUE;
-                        break;
-                    case 's':
-                        rawIndex += SILVER_VALUE;
-                        break;
-                    case 'u':
-                        rawIndex += URANIUM_VALUE;
-                        break;
-                    case 'z':
-                        rawIndex += ZINC_VALUE;
-                        break;
-                    default:
-                        break;
-                }
+                rawIndex += switch (ch) {
+                    case Resource.GOLD_CHAR -> GOLD_VALUE;
+                    case Resource.COPPER_CHAR -> COPPER_VALUE;
+                    case Resource.SILVER_CHAR -> SILVER_VALUE;
+                    case Resource.URANIUM_CHAR -> URANIUM_VALUE;
+                    case Resource.ZINC_CHAR -> ZINC_VALUE;
+                    default -> 0.0;
+                };
             }
         }
         return rawIndex;
@@ -137,6 +131,7 @@ public class Quadrant {
 
     /**
      * Gibt die Dichte einer bestimmten Resource in einem Quadranten zurück.
+     * 
      * @param resourceID Gesuchte Resource als char
      * @return Dichte der Resource
      */
@@ -147,6 +142,7 @@ public class Quadrant {
 
     /**
      * Gibt die Gesamtanzahl einer bestimmten Resource in einem Quadranten zurück.
+     * 
      * @param resourceID Gesuchte Resource als char
      * @return Gesamtanzahl der Resource
      */
@@ -164,6 +160,7 @@ public class Quadrant {
 
     /**
      * Gibt eine Liste aller Resourcen in einem Quadranten zurück.
+     * 
      * @return Liste an Resourcen
      */
     public List<Resource> getResourceList() {
@@ -182,6 +179,7 @@ public class Quadrant {
 
     /**
      * Gibt ein Array an Koordinaten zurück, an denen sich eine bestimmte Resource befindet.
+     * 
      * @param resourceID Gesuchte Resource als char
      * @return Array an Punkten, an denen die Resource vorhanden ist.
      */

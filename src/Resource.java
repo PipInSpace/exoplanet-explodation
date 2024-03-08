@@ -32,6 +32,7 @@ public class Resource {
 
     /**
      * Konstruktor aus Resourcen-Typ als char, Koordinaten
+     * 
      * @param typeCh Resourcen-Typ als char
      * @param coordX x-Koordinate
      * @param coordY y-Koordinate
@@ -51,6 +52,7 @@ public class Resource {
 
     /**
      * Konstruktor aus Resourcen-Typ als String, Koordinaten
+     * 
      * @param typeStr Resourcen-Typ als String
      * @param coordX x-Koordinate
      * @param coordY y-Koordinate
@@ -82,6 +84,7 @@ public class Resource {
 
     /**
      * Gibt den Typ der Resource als String zurück
+     * 
      * @return Resourcentyp als String
      */
     public String getTypeStr() {
@@ -97,6 +100,7 @@ public class Resource {
 
     /**
      * Gibt den Typ der Resource als char zurück
+     * 
      * @return Resourcentyp als char
      */
     public char getTypeChar() {

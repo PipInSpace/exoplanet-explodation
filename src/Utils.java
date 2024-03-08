@@ -39,6 +39,7 @@ public class Utils {
 
     /**
      * Gibt eine Liste an Dateipfaden zurück die im angefragten Ordner vorhanden sind.
+     * 
      * @param path der Pfad des zu öffnenden Ordners
      * @return Liste an Pfaden zu allen Dateien des Ordners
      */
@@ -58,6 +59,7 @@ public class Utils {
 
     /**
      * Gibt Informationen über einen Quadranten in der Konsole aus.
+     * 
      * @param q Quadrant, dessen Informationen ausgegeben werden
      */
     public static void printQuadrantInfo(Quadrant q) {
@@ -81,6 +83,7 @@ public class Utils {
 
     /**
      * Aktualisiert die Kartographie-Datenbank an dbPath mit den Quadranten die aus dem dataPath ausgelesen werden.
+     * 
      * @param dbPath Der Dateipfad zur Datenbank
      * @param dataPath Der Dateipfad zum Daten-Ordner. Dieser enthält "Quadranten"-Textdateien.
      */
@@ -109,7 +112,7 @@ public class Utils {
                 List<Resource> resources = quadrant.getResourceList();
                 String stmtStr;
 
-                Utils.logTS("Working on " + quadrant.getPlanetName() + " Q" + quadrantNum);
+                Utils.logTS("Working on " + pName + " Q" + quadrantNum);
 
                 stmtStr = String.format("SELECT COUNT(*) AS 'COUNT' FROM Planets WHERE name = '%s';", pName);
                 boolean planetExists = conn.createStatement().executeQuery(stmtStr).getInt("COUNT") > 0;
@@ -170,6 +173,7 @@ public class Utils {
 
     /**
      * Gibt eine Liste mit allen Quadranten aus der Kartographie-Datenbank zurück.
+     * 
      * @param dbPath Der Dateipfad zur Datenbank
      * @return Liste aller Quadranten
      */
@@ -196,6 +200,7 @@ public class Utils {
 
     /**
      * Gibt einen voll ausgelesenen Quadranten aus der Datenbank zurück.
+     * 
      * @param conn Eine Datenbank-Verbindung zur Kartographie-Datenbank
      * @param quadId Die Primärschlüssel-ID des Quadranten (Tabelle Quadrants Spalte quadrants_id)
      * @return Ausgelesener Quadrant
@@ -233,6 +238,7 @@ public class Utils {
 
     /**
      * Formatiert einen Point als String
+     * 
      * @param p Punkt
      * @return Punkt formatiert als String
      */

@@ -197,41 +197,58 @@ public class Quadrant {
         return points.toArray(new Point[0]);
     }
 
+    /**
+     * Findet alle benachbarten Resourcen einer Art und gruppiert sie in mehrere ResourceCluster.
+     * @param resourceID Gesuchte Resource als char
+     * @return Array aus ResourceCluster mit benachbarten Resourcen
+     */
     public ResourceCluster[] getClusters(char resourceID) {
+        // Liste der Cluster, die später augegeben wird
         List<ResourceCluster> clusters = new ArrayList<>();
 
+        // Liste der Positionen aller Resourcen einer Art, die noch keinem Cluster zugeordnet sind
         List<Point> positions = new LinkedList<>(Arrays.asList(getResourcePositions(resourceID)));
         if(positions.isEmpty()) return new ResourceCluster[0];
         while (!positions.isEmpty()) {
-            // setup new cluster
+            // Neuen Cluster erstellen und das erste Element der Positionsliste hinzufügen
             ResourceCluster cluster = new ResourceCluster(resourceID);
             cluster.addPosition(positions.getFirst());
 
-            // positions where neighbours still need checking
+            // Liste mit Positionen, bei denen noch geprüft werden muss, ob sie einen Nachbar gleicher Art haben, der auch zum Cluster gehört
             List<Point> toScan = new LinkedList<>();
             toScan.add(positions.getFirst());
 
+            // Da das erste Element einem Cluster zugeordnet ist, kann es in keinem anderen sein und wir aus der Positionsliste entfernt.
             positions.removeFirst();
 
+            // Wiederholung, bis alle Positionen im Cluster auf ihre Nachbarn überprüft wurden
             while(!toScan.isEmpty()) {
                 Point current = toScan.getFirst();
                 toScan.removeFirst();
+                // Liste aller Positionen, die in diesem Durchgang einem Cluster zugeordnet werden können
+                // Können beim Iterieren über positions noch nicht entfernt werden
                 List<Point> markForRemove = new ArrayList<>();
                 for (Point p : positions) {
-                    // if neighbour
+                    // falls p ein Nachbar von current ist
                     if((p.x == current.x + 1 && p.y == current.y) || (p.x == current.x - 1 && p.y == current.y) || (p.y == current.y + 1 && p.x == current.x) || (p.y == current.y - 1 && p.x == current.x)) {
+                        // p muss im nächsten Durchgang auf Nachbarn geprüft werden
                         toScan.add(p);
+                        // p gehört zum aktuellen Cluster
                         cluster.addPosition(p);
+                        // p muss aus positions entfernt werden, da er zugeordnet wurde
                         markForRemove.add(p);
                     }
                 }
+                // alle Positionen entfernen, die zugeordnet wurden
                 for (Point p : markForRemove) {
                     positions.remove(p);
                 }
             }
 
+            // vollständigen Cluster zur Liste hinzufügen
             clusters.add(cluster);
         }
+        // Rückgabe aller ResourceCluster als Array
         return clusters.toArray(new ResourceCluster[0]);
     }
 

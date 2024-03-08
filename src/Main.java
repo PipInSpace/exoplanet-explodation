@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.util.List;
 
 public class Main {
@@ -15,6 +16,8 @@ public class Main {
 
         for(ResourceCluster c : q.getClusters('z')) {
             System.out.println(c.getSize());
+            for(Point p : c.getPositions())
+                System.out.println("    " + Utils.pointAsString(p));
         }
     }
 }

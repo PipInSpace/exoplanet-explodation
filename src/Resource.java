@@ -121,7 +121,7 @@ public class Resource {
             case SILVER_CHAR -> Type.SILVER;
             case URANIUM_CHAR -> Type.URANIUM;
             case ZINC_CHAR -> Type.ZINC;
-            default -> Type.ZINC;
+            default -> Type.NONE;
         };
     }
 }

@@ -18,6 +18,10 @@ public class Main {
         Quadrant q = quadrants.getFirst();
         assert q != null;
         Utils.printQuadrantInfo(q);
+
+        for(ResourceCluster c : q.getClusters('z')) {
+            System.out.println(c.getSize());
+        }
     }
 
     public static void updateDatabase(String dbPath, String dataPath) {

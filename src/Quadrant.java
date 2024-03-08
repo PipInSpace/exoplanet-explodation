@@ -2,7 +2,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class Quadrant {
@@ -193,6 +193,44 @@ public class Quadrant {
         }
 
         return points.toArray(new Point[0]);
+    }
+
+    public ResourceCluster[] getClusters(char resourceID) {
+        List<ResourceCluster> clusters = new ArrayList<>();
+
+        List<Point> positions = new LinkedList<>(Arrays.asList(getResourcePositions(resourceID)));
+        if(positions.isEmpty()) return new ResourceCluster[0];
+        while (!positions.isEmpty()) {
+            // setup new cluster
+            ResourceCluster cluster = new ResourceCluster(resourceID);
+            cluster.addPosition(positions.getFirst());
+
+            // positions where neighbours still need checking
+            List<Point> toScan = new LinkedList<>();
+            toScan.add(positions.getFirst());
+
+            positions.removeFirst();
+
+            while(!toScan.isEmpty()) {
+                Point current = toScan.getFirst();
+                toScan.removeFirst();
+                List<Point> markForRemove = new ArrayList<>();
+                for (Point p : positions) {
+                    // if neighbour
+                    if((p.x == current.x + 1 && p.y == current.y) || (p.x == current.x - 1 && p.y == current.y) || (p.y == current.y + 1 && p.x == current.x) || (p.y == current.y - 1 && p.x == current.x)) {
+                        toScan.add(p);
+                        cluster.addPosition(p);
+                        markForRemove.add(p);
+                    }
+                }
+                for (Point p : markForRemove) {
+                    positions.remove(p);
+                }
+            }
+
+            clusters.add(cluster);
+        }
+        return clusters.toArray(new ResourceCluster[0]);
     }
 
     public String getPlanetName() {

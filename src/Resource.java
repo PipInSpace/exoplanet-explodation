@@ -14,22 +14,28 @@ public class Resource {
     }
 
     // constants
-    private static final String GOLD_STR = "GOLD";
-    private static final String COPPER_STR = "COPPER";
-    private static final String SILVER_STR = "SILVER";
-    private static final String URANIUM_STR = "URANIUM";
-    private static final String ZINC_STR = "ZINC";
-    private static final char GOLD_CHAR = 'g';
-    private static final char COPPER_CHAR = 'k';
-    private static final char SILVER_CHAR = 's';
-    private static final char URANIUM_CHAR = 'u';
-    private static final char ZINC_CHAR = 'z';
+    public static final String GOLD_STR = "GOLD";
+    public static final String COPPER_STR = "COPPER";
+    public static final String SILVER_STR = "SILVER";
+    public static final String URANIUM_STR = "URANIUM";
+    public static final String ZINC_STR = "ZINC";
+    public static final char GOLD_CHAR = 'g';
+    public static final char COPPER_CHAR = 'k';
+    public static final char SILVER_CHAR = 's';
+    public static final char URANIUM_CHAR = 'u';
+    public static final char ZINC_CHAR = 'z';
 
     // Values
     private final Type type;
     private final int coordX;
     private final int coordY;
 
+    /**
+     * Konstruktor aus Resourcen-Typ als char, Koordinaten
+     * @param typeCh Resourcen-Typ als char
+     * @param coordX x-Koordinate
+     * @param coordY y-Koordinate
+     */
     public Resource(char typeCh, int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
@@ -43,6 +49,12 @@ public class Resource {
         };
     }
 
+    /**
+     * Konstruktor aus Resourcen-Typ als String, Koordinaten
+     * @param typeStr Resourcen-Typ als String
+     * @param coordX x-Koordinate
+     * @param coordY y-Koordinate
+     */
     public Resource(String typeStr, int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
@@ -68,6 +80,10 @@ public class Resource {
         return this.coordY;
     }
 
+    /**
+     * Gibt den Typ der Resource als String zurück
+     * @return Resourcentyp als String
+     */
     public String getTypeStr() {
         return switch (this.type) {
             case GOLD -> GOLD_STR;
@@ -79,6 +95,10 @@ public class Resource {
         };
     }
 
+    /**
+     * Gibt den Typ der Resource als char zurück
+     * @return Resourcentyp als char
+     */
     public char getTypeChar() {
         return switch (this.type) {
             case GOLD -> GOLD_CHAR;
